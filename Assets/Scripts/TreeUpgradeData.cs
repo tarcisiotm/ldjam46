@@ -22,9 +22,7 @@ public class TreeUpgradeData
 
     public void DoNextStep(float stepDuration) {
         currentStep++;
-        Debug.Log("1");
         if (IsDone) { return; }
-        Debug.Log("2");
 
         scaleTween.FadeStep(currentStep, growSteps, stepDuration);
     }

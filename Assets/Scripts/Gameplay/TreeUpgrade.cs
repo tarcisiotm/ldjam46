@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class TreeUpgrade : MonoBehaviour
 {
@@ -26,7 +25,6 @@ public class TreeUpgrade : MonoBehaviour
     public void Upgrade() {
 
         if(currentIndex + 1 >= treeUpgrades.Length && currentUpgrade.IsDone) { return; }
-
 
         if (currentUpgrade.IsDone) {
             currentUpgrade.Deactivate();
