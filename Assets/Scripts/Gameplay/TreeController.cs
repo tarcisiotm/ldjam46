@@ -11,7 +11,7 @@ public class TreeController : MonoBehaviour
     [SerializeField] float sunPerSecDraining = .5f;
 
     [SerializeField] float sun = 50;
-    [SerializeField] float health = 100;
+    //[SerializeField] float health = 100;
 
     bool isDay = false;
     bool raining = false;

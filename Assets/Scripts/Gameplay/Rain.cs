@@ -1,10 +1,12 @@
 ﻿using System.Collections;
 using UnityEngine;
+using DG.Tweening;
 
 public class Rain : MonoBehaviour
 {
     [SerializeField] float duration = 5f;
     [SerializeField] float delayToNotify = 1f;
+    [SerializeField] AudioClip rainClip = default;
 
     public delegate void RainEvent(bool isRaining);
     public static event RainEvent OnRainEvent;
@@ -19,8 +21,12 @@ public class Rain : MonoBehaviour
         StartCoroutine(DoRain());
     }
 
+    void Start() { }
+
     IEnumerator DoRain() {
         float currentDuration = duration;
+
+        var audioSource = PlayAudio();
 
         yield return new WaitForSeconds(delayToNotify);
 
@@ -38,14 +44,23 @@ public class Rain : MonoBehaviour
             dur = p.main.duration > dur ? p.main.duration : dur;
             p.Stop(false, ParticleSystemStopBehavior.StopEmitting);
         }
+        audioSource.DOFade(0, dur);
 
         yield return new WaitForSeconds(dur);
         gameObject.SetActive(false);
     }
 
-    void Start()
-    {
-        
+    AudioSource PlayAudio() {
+        Vector3 pos = new Vector3(transform.position.x,
+                                                    1f,
+                                                    transform.position.z);
+
+        var audio = GameplayManager.I.GetAudioFromPool(pos);
+
+        audio.PlayAndDisable(rainClip, 0);
+        var audioSource = audio.GetComponentInChildren<AudioSource>();
+        audioSource.DOFade(1, .3f);
+        return audioSource;
     }
 
 }
