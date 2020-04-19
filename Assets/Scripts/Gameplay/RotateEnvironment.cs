@@ -6,10 +6,14 @@ public class RotateEnvironment : MonoBehaviour {
     [SerializeField] float rotationSpeed = 20f;
     [SerializeField] float minThreshold = .1f;
 
+    [SerializeField] LightningController lightningController = default;
+
     float axis;
     IGetClicked iGetClicked;
     Ray ray;
     RaycastHit hit;
+
+    bool isLightning = false;
 
     void Start() { }
 
@@ -34,9 +38,18 @@ public class RotateEnvironment : MonoBehaviour {
             iGetClicked = hit.collider.gameObject.GetComponentInParent<IGetClicked>();
             iGetClicked?.OnClick();
 
+            if (isLightning) {
+                isLightning = false;
+                lightningController.DoLightning(hit.point);
+            }
+
             //Debug.DrawLine(ray.origin, hit.point);
             //Debug.Log(hit.point + " " + hit.collider.gameObject.name);
         }
+    }
+
+    public void EnableLightning() {
+        isLightning = true;
     }
 
 }

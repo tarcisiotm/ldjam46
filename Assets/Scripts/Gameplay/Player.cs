@@ -1,16 +1,18 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    // Start is called before the first frame update
+    [SerializeField] float energy;
+    [SerializeField] float energyPerSecond = .01f;
+
+    int currentMaxEnergy = 1;
+    float currentMaxEnergyPerSecond = 1;
+
     void Start()
     {
         
     }
 
-    // Update is called once per frame
     void Update()
     {
         
