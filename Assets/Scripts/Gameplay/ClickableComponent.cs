@@ -11,10 +11,8 @@ public class ClickableComponent : MonoBehaviour, IGetClicked
     void Start(){}
 
     void IGetClicked.OnClick() {
-        Debug.Log("1");
         if(oneTime && hasBeenClicked) { return; }
         hasBeenClicked = true;
-        Debug.Log("2");
         onClick?.Invoke();
     }
 }

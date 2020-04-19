@@ -34,8 +34,8 @@ public class RotateEnvironment : MonoBehaviour {
             iGetClicked = hit.collider.gameObject.GetComponentInParent<IGetClicked>();
             iGetClicked?.OnClick();
 
-            Debug.DrawLine(ray.origin, hit.point);
-            Debug.Log(hit.point + " " + hit.collider.gameObject.name);
+            //Debug.DrawLine(ray.origin, hit.point);
+            //Debug.Log(hit.point + " " + hit.collider.gameObject.name);
         }
     }
 
