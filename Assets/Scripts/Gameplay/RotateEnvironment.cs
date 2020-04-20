@@ -5,6 +5,7 @@ using UnityEngine;
 public class RotateEnvironment : MonoBehaviour {
     [SerializeField] float rotationSpeed = 20f;
     [SerializeField] float minThreshold = .1f;
+    [SerializeField] Texture2D cursorTexture = null;
 
     [SerializeField] LightningController lightningController = default;
 
@@ -41,6 +42,8 @@ public class RotateEnvironment : MonoBehaviour {
             if (isLightning) {
                 isLightning = false;
                 lightningController.DoLightning(hit.point);
+                Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
+
             }
 
             //Debug.DrawLine(ray.origin, hit.point);
@@ -49,7 +52,8 @@ public class RotateEnvironment : MonoBehaviour {
     }
 
     public void EnableLightning() {
+        Cursor.SetCursor(cursorTexture, new Vector2(16f,16f), CursorMode.Auto);
         isLightning = true;
-    }
+    } 
 
 }

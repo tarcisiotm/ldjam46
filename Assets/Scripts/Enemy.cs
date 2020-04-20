@@ -11,6 +11,7 @@ public class Enemy : MonoBehaviour
     [SerializeField] float attackCooldown = 3f;
 
     [Header("References")]
+    [SerializeField] GameObject parentToDeactivate = default;
     [SerializeField] Animator animator = default;
     [SerializeField] Transform[] waypoints = default;
     //walk loop?
@@ -31,11 +32,26 @@ public class Enemy : MonoBehaviour
     const string ANIM_ATTACK_SMASH = "Smash Attack";
     const string ANIM_DIE = "Die";
 
+    bool hasInit = false;
+
+    Vector3 initialPos;
+    Quaternion initialRot;
+
     Coroutine attackRoutine;
 
-    void Start()
+    void OnEnable()
     {
-        //transform.LookAt(waypoints[0]);
+        currentWaypointIndex = -1;
+
+        if (!hasInit) {
+            hasInit = true;
+            initialPos = transform.localPosition;
+            initialRot = transform.localRotation;
+        } else {
+            transform.localPosition = initialPos;
+            transform.localRotation = initialRot;
+        }
+
         animator.SetBool(ANIM_WALK_FORWARD, true);
         ExecuteWaypoint();
     }
@@ -113,6 +129,7 @@ public class Enemy : MonoBehaviour
     }
 
     private void Die() {
+        DOTween.Kill(this);
         if (isAttacking) {
             isAttacking = false;
             StopCoroutine(attackRoutine);
