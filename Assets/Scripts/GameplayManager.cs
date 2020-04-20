@@ -15,6 +15,9 @@ public class GameplayManager : Singleton<GameplayManager>
 
     [SerializeField] Camera mainCamera = default;
 
+    [SerializeField] GameObject lightningGO = default;
+
+
     PoolingManager poolingManager = default;
     GameObject auxGO = default;
 
@@ -45,6 +48,10 @@ public class GameplayManager : Singleton<GameplayManager>
 
     public void ParentToCamera(Transform newChild) {
         newChild.SetParent(mainCamera.transform, true);
+    }
+
+    public GameObject GetLightningObject() {
+        return lightningGO;
     }
 
     #region Player
