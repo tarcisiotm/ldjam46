@@ -40,10 +40,10 @@ public class Enemy : MonoBehaviour
         ExecuteWaypoint();
     }
 
-    void Update()
-    {
-        if (!isAttacking) { return; }
-    }
+    //void Update()
+    //{
+    //    if (!isAttacking) { return; }
+    //}
 
     #region Waypoints
     void ExecuteWaypoint() {
@@ -64,7 +64,6 @@ public class Enemy : MonoBehaviour
     }
 
     void DoRotation() {
-
         if (currentWaypointIndex + 1 == waypoints.Length) {
             animator.SetBool(ANIM_WALK_FORWARD, false);
             Attack();
@@ -114,7 +113,6 @@ public class Enemy : MonoBehaviour
     }
 
     private void Die() {
-
         if (isAttacking) {
             isAttacking = false;
             StopCoroutine(attackRoutine);
@@ -127,5 +125,14 @@ public class Enemy : MonoBehaviour
         int index = Random.Range(0, dieClips.Length);
 
         audio.PlayAndDisable(dieClips[index], 1);
+
+        StartCoroutine(DoDie());
+    }
+
+    IEnumerator DoDie() {
+        yield return new WaitForSeconds(2f);
+        transform.DOLocalMoveY(transform.localPosition.y - .5f, 2f);
+        yield return new WaitForSeconds(2f);
+        gameObject.SetActive(false);
     }
 }

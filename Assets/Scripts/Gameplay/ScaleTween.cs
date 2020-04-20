@@ -22,4 +22,16 @@ public class ScaleTween : MonoBehaviour
         transform.DOScale(scale, duration);
     }
 
+    public void FadeInBackwards(int totalSteps, float fadeDuration) {
+        transform.localScale = finalScale;
+        //if (!fadeInScale || initialFadeInScale == finalScale) { return; }
+        FadeStepBackwards(totalSteps - 1, totalSteps, fadeDuration);
+        //transform.DOScale(initialScale, fadeDuration);
+    }
+
+    public void FadeStepBackwards(int step, int totalSteps, float duration) {
+        Vector3 scale = Vector3.Lerp(finalScale, initialScale, (float)step / (float)totalSteps);
+        transform.DOScale(scale, duration);
+    }
+
 }

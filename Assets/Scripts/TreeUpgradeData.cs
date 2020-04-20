@@ -20,8 +20,15 @@ public class TreeUpgradeData
         scaleTween?.FadeIn(fadeInDuration);
     }
 
+    public void ActivateReverse(float fadeInDuration) {
+        scaleTween = mainGO.GetComponentInChildren<ScaleTween>();
+        mainGO.SetActive(true);
+        scaleTween?.FadeInBackwards(growSteps, fadeInDuration);
+    }
+
     public void DoNextStep(float stepDuration) {
         currentStep++;
+
         if (IsDone) { return; }
 
         scaleTween.FadeStep(currentStep, growSteps, stepDuration);
