@@ -40,11 +40,15 @@ public class Rain : MonoBehaviour
         OnRainEvent?.Invoke(false);
         float dur = 0;
 
-        foreach(var p in particleSystems) {
+        audioSource.DOFade(0, 1f);
+
+        yield return new WaitForSeconds(.7f);
+
+        foreach (var p in particleSystems) {
             dur = p.main.duration > dur ? p.main.duration : dur;
             p.Stop(false, ParticleSystemStopBehavior.StopEmitting);
         }
-        audioSource.DOFade(0, dur);
+
 
         yield return new WaitForSeconds(dur);
         gameObject.SetActive(false);

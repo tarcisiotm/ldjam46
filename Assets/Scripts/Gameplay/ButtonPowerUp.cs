@@ -11,6 +11,9 @@ public class ButtonPowerUp : MonoBehaviour
     [Tooltip("For powerups that need setup, this is a cooldown.")]
     [SerializeField] bool reEnableFromExternalEvent = false;
 
+    //if this is still enabled, and not null, do not click
+    [SerializeField] GameObject goToCheck = null;
+
     [SerializeField] UnityEvent onClick = null;
 
     bool isEnabled = true;
@@ -43,6 +46,7 @@ public class ButtonPowerUp : MonoBehaviour
     public void Enable() {
         button.interactable = isEnabled = true;
     }
+
     public void Disable() {
         button.interactable = isEnabled = false;
     }
@@ -50,6 +54,8 @@ public class ButtonPowerUp : MonoBehaviour
     //from Button
     public void OnClick() {
         if (!isFull) { return; }
+
+        if(goToCheck != null && goToCheck.activeSelf) { return; }
 
         onClick?.Invoke();
 

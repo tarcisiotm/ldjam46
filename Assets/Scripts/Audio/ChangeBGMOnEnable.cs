@@ -13,12 +13,8 @@ public class ChangeBGMOnEnable : MonoBehaviour
         AudioManager.I.PlayBGM(bgmClip, volume);
     }
 
-    void Awake()
-    {
-        PlayBGM();
-    }
-
     private void Start() {
+        PlayBGM();
         if (autoDestroy) {
             Destroy(gameObject);
         }

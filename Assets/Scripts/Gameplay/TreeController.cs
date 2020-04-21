@@ -8,14 +8,9 @@ public class TreeController : MonoBehaviour
     [SerializeField] float waterPerSecDraining = .5f;
 
     [SerializeField] TreeUpgrade treeUpgrade;
-    //[SerializeField] float sunPerSecDay = 5;
-    //[SerializeField] float sunPerSecDraining = .5f;
 
-    //[SerializeField] float sun = 50;
-    //[SerializeField] float health = 100;
-
-    //bool isDay = false;
     bool raining = false;
+    bool isDone = false;
     float deltaTime = 0f;
 
     void Start()
@@ -24,22 +19,19 @@ public class TreeController : MonoBehaviour
     }
 
     void Update() {
+        if (isDone) { return; }
         deltaTime = Time.deltaTime;
         UpdateWater();
-        //UpdateSun();
+    }
+
+    public void SetIsDone() {
+        water = 100;
+        isDone = true;
     }
 
     private void OnRainEvent(bool isRaining) {
         raining = isRaining;
     }
-
-    //void UpdateSun() {
-    //    if (isDay && !raining) {
-    //        sun += deltaTime * sunPerSecDay;
-    //        return;
-    //    }
-    //    sun -= deltaTime * sunPerSecDraining;
-    //}
 
     void UpdateWater() {
         if (raining) {
@@ -48,7 +40,7 @@ public class TreeController : MonoBehaviour
 
             if(water == 100) {
                 treeUpgrade.Upgrade();
-                water = 25;
+                water = 65;
             }
 
             return;

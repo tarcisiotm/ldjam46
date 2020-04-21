@@ -9,10 +9,12 @@ public class TreeUpgradeData
     public GameObject mainGO = default;
     public GameObject enableOnFinalScaleReached = default;
     public GameObject disableOnFinalScaleReached = default;
-    ScaleTween scaleTween;
-    int currentStep = 0;
+    ScaleTween scaleTween = default;
 
-    public bool IsDone => currentStep > growSteps || scaleTween == null;
+    [Header("Debug")]
+    public int currentStep = 1;
+
+    public bool IsDone => currentStep >= growSteps || scaleTween == null;
 
     public void Activate(float fadeInDuration) {
         scaleTween = mainGO.GetComponentInChildren<ScaleTween>();

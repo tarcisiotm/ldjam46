@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using TG.Core;
+using UnityEngine;
 
 public class TreeUpgrade : MonoBehaviour {
     [SerializeField] TreeUpgradeData[] treeUpgrades = default;
@@ -10,18 +11,25 @@ public class TreeUpgrade : MonoBehaviour {
     [Header("Debug")]
     [SerializeField] int currentIndex = -1;
 
+    bool isDone = false;
+
     void Start() {
         if (treeUpgrades.Length > 0) {
             currentUpgrade = treeUpgrades[0];
         }
     }
 
+#if UNITY_EDITOR
     private void Update() {
         if (Input.GetKeyDown(KeyCode.Space)) { Upgrade(); }
         if (Input.GetKeyDown(KeyCode.Return)) { DeUpgrade(); }
     }
+#endif
 
     public void Upgrade() {
+        if (isDone) { return; }
+
+        //if is final step next and enemy is alive
 
         if (currentIndex + 1 >= treeUpgrades.Length && currentUpgrade.IsDone) { return; }
 
@@ -33,15 +41,19 @@ public class TreeUpgrade : MonoBehaviour {
         } else {
             currentUpgrade.DoNextStep(stepDuration);
         }
+    }
 
+    public void SetIsDone() {
+        isDone = true;
     }
 
     public void DeUpgrade() {
-
         if (currentIndex - 1 < 0) {
-            Debug.Log("Game over");
+            ScenesManager.I.ReloadScene();
             return;
         }
+
+        if (isDone) { return; }
 
         currentIndex--;
 

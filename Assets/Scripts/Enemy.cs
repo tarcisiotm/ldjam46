@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using UnityEngine;
 using DG.Tweening;
+using TG.Core.Audio;
 
 public class Enemy : MonoBehaviour
 {
@@ -99,9 +100,19 @@ public class Enemy : MonoBehaviour
     #endregion Waypoints
 
     IEnumerator DoAttack() {
+        TreeUpgrade treeUpgrade = FindObjectOfType<TreeUpgrade>();
+        PlayAudioAndDisable audio;
+
         while (isAttacking) {
             yield return new WaitForSeconds(attackCooldown/2f);
             animator.SetTrigger(GetRandomAttack());
+            yield return new WaitForSeconds(.4f);
+
+            if (!isAttacking) { yield break; }
+
+            audio = GameplayManager.I.GetAudioFromPool(transform.position);
+            audio.PlayAndDisable(attackClip, .5f);
+            treeUpgrade.DeUpgrade();
             yield return new WaitForSeconds(attackCooldown / 2f);
             //var audio = GameplayManager.I.GetAudioFromPool(transform.position);
             //audio.PlayAndDisable(attackClip, 1);
@@ -129,12 +140,14 @@ public class Enemy : MonoBehaviour
     }
 
     private void Die() {
-        DOTween.Kill(this);
-        if (isAttacking) {
-            isAttacking = false;
+        DOTween.Kill(transform);
+
+        if(attackRoutine != null) {
             StopCoroutine(attackRoutine);
             attackRoutine = null;
         }
+
+        isAttacking = false;
 
         animator.SetTrigger(ANIM_DIE);
 
