@@ -12,9 +12,9 @@ public class TreeUpgradeData
     ScaleTween scaleTween = default;
 
     [Header("Debug")]
-    public int currentStep = 1;
+    int currentStep = 1;
 
-    public bool IsDone => currentStep >= growSteps || scaleTween == null;
+    public bool IsDone => currentStep > growSteps || scaleTween == null;
 
     public void Activate(float fadeInDuration) {
         scaleTween = mainGO.GetComponentInChildren<ScaleTween>();
@@ -29,11 +29,8 @@ public class TreeUpgradeData
     }
 
     public void DoNextStep(float stepDuration) {
-        currentStep++;
-
-        if (IsDone) { return; }
-
         scaleTween.FadeStep(currentStep, growSteps, stepDuration);
+        currentStep++;
     }
 
     public void OnFinalScaleReached() {

@@ -6,7 +6,9 @@ public class Rain : MonoBehaviour
 {
     [SerializeField] float duration = 5f;
     [SerializeField] float delayToNotify = 1f;
-    [SerializeField] AudioClip rainClip = default;
+    [SerializeField] float volume = .75f;
+    //[SerializeField] AudioClip rainClip = default;
+    [SerializeField] AudioSource audioSource = default;
 
     public delegate void RainEvent(bool isRaining);
     public static event RainEvent OnRainEvent;
@@ -25,8 +27,7 @@ public class Rain : MonoBehaviour
 
     IEnumerator DoRain() {
         float currentDuration = duration;
-
-        var audioSource = PlayAudio();
+        audioSource.DOFade(volume, 2f).SetEase(Ease.Linear);
 
         yield return new WaitForSeconds(delayToNotify);
 
@@ -54,17 +55,17 @@ public class Rain : MonoBehaviour
         gameObject.SetActive(false);
     }
 
-    AudioSource PlayAudio() {
-        Vector3 pos = new Vector3(transform.position.x,
-                                                    1f,
-                                                    transform.position.z);
+    //AudioSource PlayAudio() {
+    //    Vector3 pos = new Vector3(transform.position.x,
+    //                                                1f,
+    //                                                transform.position.z);
 
-        var audio = GameplayManager.I.GetAudioFromPool(pos);
+    //    //var audio = GameplayManager.I.GetAudioFromPool(pos);
 
-        audio.PlayAndDisable(rainClip, 0);
-        var audioSource = audio.GetComponentInChildren<AudioSource>();
-        audioSource.DOFade(1, .3f);
-        return audioSource;
-    }
+    //    //audio.PlayAndDisable(rainClip, 0);
+    //    var audioSource = audio.GetComponentInChildren<AudioSource>();
+    //    audioSource.DOFade(1, .3f);
+    //    return audioSource;
+    //}
 
 }

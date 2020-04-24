@@ -19,7 +19,7 @@ public class ScaleTween : MonoBehaviour
 
     public void FadeStep(int step, int totalSteps, float duration) {
         Vector3 scale = Vector3.Lerp(initialScale, finalScale, (float)step / (float)totalSteps);
-        transform.DOScale(scale, duration);
+        transform.DOScale(scale, duration).SetEase(Ease.Linear);
     }
 
     public void FadeInBackwards(int totalSteps, float fadeDuration) {

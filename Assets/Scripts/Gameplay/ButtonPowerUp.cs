@@ -16,12 +16,16 @@ public class ButtonPowerUp : MonoBehaviour
 
     [SerializeField] UnityEvent onClick = null;
 
+    Color originalColor;
+
+    [SerializeField] Color filledColor;
+
     bool isEnabled = true;
     bool isFull = false;
 
     void Start()
     {
-        
+        originalColor = fillImage.color;   
     }
 
     void Update()
@@ -34,11 +38,13 @@ public class ButtonPowerUp : MonoBehaviour
 
         if (fillImage.fillAmount >= 1) {
             fillImage.fillAmount = 1;
+            fillImage.color = filledColor;
             isFull = true;
         }
     }
 
     public void Reset() {
+        fillImage.color = originalColor;
         isFull = false;
         fillImage.fillAmount = 0;
     }

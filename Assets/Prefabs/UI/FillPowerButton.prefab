@@ -131,9 +131,11 @@ MonoBehaviour:
   fillImage: {fileID: 6545073515971673184}
   fillPerSec: 0.02
   reEnableFromExternalEvent: 0
+  goToCheck: {fileID: 0}
   onClick:
     m_PersistentCalls:
       m_Calls: []
+  filledColor: {r: 0, g: 0, b: 0, a: 0}
 --- !u!222 &6545073515599824845
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -155,7 +157,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.6313726}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
