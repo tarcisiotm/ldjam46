@@ -8,6 +8,8 @@ public class TreeUpgrade : MonoBehaviour {
     [SerializeField] GameObject fadeGO = default;
     TreeUpgradeData currentUpgrade = default;
 
+    public TreeUpgradeData CurrentUpgradeData => currentUpgrade;
+
     [Header("Debug")]
     [SerializeField] int currentIndex = -1;
 

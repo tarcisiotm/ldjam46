@@ -5,9 +5,9 @@ public class ScaleTween : MonoBehaviour
 {
     [SerializeField] bool fadeInScale = true;
 
-    [SerializeField] Vector3 initialFadeInScale = new Vector3(1, 1, 1);
-    [SerializeField] Vector3 initialScale = new Vector3(1, 1, 1);
-    [SerializeField] Vector3 finalScale = Vector3.one;
+    [SerializeField] public Vector3 initialFadeInScale = new Vector3(1, 1, 1);
+    [SerializeField] public Vector3 initialScale = new Vector3(1, 1, 1);
+    [SerializeField] public Vector3 finalScale = Vector3.one;
 
     void Start() { }
 

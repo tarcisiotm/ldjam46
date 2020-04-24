@@ -16,6 +16,10 @@ public class TreeUpgradeData
 
     public bool IsDone => currentStep >= growSteps || scaleTween == null;
 
+    public ScaleTween GetScaleTween() {
+        return mainGO.GetComponentInChildren<ScaleTween>();
+    }
+
     public void Activate(float fadeInDuration) {
         scaleTween = mainGO.GetComponentInChildren<ScaleTween>();
         mainGO.SetActive(true);
