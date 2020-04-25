@@ -21,6 +21,9 @@ public class GameplayManager : Singleton<GameplayManager>
     PoolingManager poolingManager = default;
     GameObject auxGO = default;
 
+    [SerializeField] AudioMelodyController audioMelody;
+    public AudioMelodyController AudioMelody => audioMelody;
+
     IEnumerator Start()
     {
         yield return null;
