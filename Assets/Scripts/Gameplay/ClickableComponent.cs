@@ -3,15 +3,19 @@ using UnityEngine.Events;
 
 public class ClickableComponent : MonoBehaviour, IGetClicked
 {
-    [SerializeField] bool oneTime = true;
-    [SerializeField] UnityEvent onClick = null;
+    [SerializeField] protected bool oneTime = true;
+    [SerializeField] protected UnityEvent onClick = null;
 
-    bool hasBeenClicked = false;
+    protected bool hasBeenClicked = false;
     
     void Start(){}
 
     void IGetClicked.OnClick() {
-        if(oneTime && hasBeenClicked) { return; }
+        OnClick();
+    }
+
+    protected virtual void OnClick() {
+        if (oneTime && hasBeenClicked) { return; }
         hasBeenClicked = true;
         onClick?.Invoke();
     }
