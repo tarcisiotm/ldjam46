@@ -6,13 +6,20 @@ using DG.Tweening;
 public class Spawner : MonoBehaviour {
 
     [SerializeField] Transform centerPoint;
+    [SerializeField] Transform spawnerParent;
 
     [SerializeField] float minDistanceToSpawnFromCenter = .75f; // from center
+
+    [Header("Density check dist")]
     [SerializeField] float minSmallDistanceToSpawn = .2f;
     [SerializeField] float minMediumDistanceToSpawn = .75f;
     [SerializeField] float minBigDistanceToSpawn = 1.5f;
 
-    [SerializeField] Transform spawnerParent;
+
+    [Header("Clear radius")]
+    [SerializeField] float smallInnerRadius = .15f;
+    [SerializeField] float mediumInnerRadius = .25f;
+    [SerializeField] float bigInnerRadius = .35f;
 
     [Space]
     [SerializeField] float minSmallRadiusDensityCheck = .25f;
@@ -53,6 +60,8 @@ public class Spawner : MonoBehaviour {
 
     bool shouldAbortSpawn = false;
 
+    bool markedForRemoval = false;
+
     //todo cooldown?
 
     private void Start() {
@@ -61,6 +70,10 @@ public class Spawner : MonoBehaviour {
     public void Spawn() {
         if (!canSpawn) { return; }
 
+        if (markedForRemoval) {
+            //Debug.Log("Should wait?");
+        }
+
         ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
         if (!Physics.Raycast(ray, out hit, 102)) {
@@ -68,40 +81,62 @@ public class Spawner : MonoBehaviour {
         }
 
         //TODO check if should check for this or if center point is null
-        if (Vector3.Distance(centerPoint.position ,hit.point) < minDistanceToSpawnFromCenter) {
+        if (Vector3.Distance(centerPoint.position, hit.point) < minDistanceToSpawnFromCenter) {
             Debug.Log("Spawn particles");
             return;
         }
 
-        isBigMaxed = isBigAllowed && IsBigDensityMaxed(hit.point, false);
-        isMediumMaxed = isMediumAllowed && IsMediumDensityMaxed(hit.point, false);
-        isSmallMaxed = IsSmallDensityMaxed(hit.point, false);
+        isBigMaxed = isBigAllowed && IsBigDensityMaxed(hit.point);
+        isMediumMaxed = isMediumAllowed && IsMediumDensityMaxed(hit.point);
+        isSmallMaxed = IsSmallDensityMaxed(hit.point);
 
-        if (!IsBigDensityMaxed(hit.point, true) && IsMediumDensityMaxed(hit.point, false)) {
-            Debug.Log("Big!");
+        if (isMediumMaxed) {
+            ClearOthers(hit.point, bigInnerRadius, mediumSpawnedObjects);
+            ClearOthers(hit.point, bigInnerRadius, smallSpawnedObjects);
             SpawnFromList(bigPlants, ref bigSpawnedObjects, hit.point);
             return;
         }
 
-        if (IsSmallDensityMaxed(hit.point, true) && !IsMediumDensityMaxed(hit.point, true)) {
-            Debug.Log("Medium!");
+        if (isSmallMaxed) {
+            ClearOthers(hit.point, mediumInnerRadius, mediumSpawnedObjects);
+            ClearOthers(hit.point, mediumInnerRadius, smallSpawnedObjects);
             SpawnFromList(plants, ref mediumSpawnedObjects, hit.point);
             return;
         }
 
-        Debug.Log("Small!");
+        ClearOthers(hit.point, smallInnerRadius, smallSpawnedObjects);
 
         SpawnFromList(smallPlants, ref smallSpawnedObjects, hit.point);
     }
 
+    void ClearOthers(Vector3 pos, float innerRadius, List<GameObject> list) {
+        float distance = 0;
+
+        for (int i = 0; i < list.Count; i++) {
+            distance = Vector3.Distance(list[i].transform.position, pos);
+
+            if (distance > innerRadius) {
+                continue;
+            }
+
+            GameObject go = list[i];
+
+            if (!markedForRemoval) {
+                go.transform.DOScale(Vector3.one * .001f, .3f).OnComplete(OnFadeOutComplete);
+                markedForRemoval = true;
+            } else {
+                go.transform.DOScale(Vector3.one * .001f, .3f);
+            }
+
+            toRemove.Add(go);
+        }
+
+        foreach (var g in toRemove) {
+            list.Remove(g);
+        }
+    }
+
     void SpawnFromList(GameObject[] list, ref List<GameObject> spawnList, Vector3 pos) {
-
-        //if (shouldAbortSpawn) {
-        //    Debug.Log("Spawn aborted");
-        //    shouldAbortSpawn = false;
-        //    return;
-        //}
-
         int index = Random.Range(0, list.Length);
 
         GameObject go = Instantiate(list[index]);
@@ -123,16 +158,11 @@ public class Spawner : MonoBehaviour {
         Vector3 pos,
         List<GameObject> list,
         int maxDensity,
-        float minDistanceToSpawn,
-        float radiusToCheck,
-        bool canRemove
+        float radiusToCheck
     ) {
         int density = 0;
         float distance = 0;
         bool result = false;
-        bool hasRemoved = false;
-
-        //if too close do not spawn
 
         for (int i = 0; i < list.Count; i++) {
             distance = Vector3.Distance(list[i].transform.position, pos);
@@ -141,47 +171,44 @@ public class Spawner : MonoBehaviour {
                 continue;
             }
 
-            if(canRemove && !hasRemoved && distance < minDistanceToSpawn) {
-                GameObject go = list[i];
-                go.transform.DOScale(Vector3.one * .001f, .3f).OnComplete(OnFadeOutComplete);
-                toRemove.Add(go);
-                hasRemoved = true;
-            }
-
             density++;
 
-            if (density > maxDensity) {
+            if (density >= maxDensity) {
                 result = true;
             }
+            Debug.Log("Density reached: "+density + "  "+maxDensity);
 
-        }
-
-        foreach(var g in toRemove) {
-            list.Remove(g);
         }
 
         return result;
     }
 
-    bool IsSmallDensityMaxed(Vector3 pos, bool canRemove) {
-        return CheckDensity(pos, smallSpawnedObjects, smallDensityThreshold, minSmallDistanceToSpawn, minSmallRadiusDensityCheck, canRemove);
+    bool IsSmallDensityMaxed(Vector3 pos) {
+        return CheckDensity(pos, smallSpawnedObjects, smallDensityThreshold, minSmallDistanceToSpawn);
     }
 
-    bool IsMediumDensityMaxed(Vector3 pos, bool canRemove) {
-        return CheckDensity(pos, mediumSpawnedObjects, mediumDensityThreshold, minMediumDistanceToSpawn, minMediumRadiusDensityCheck, canRemove);
+    bool IsMediumDensityMaxed(Vector3 pos) {
+        return CheckDensity(pos, mediumSpawnedObjects, mediumDensityThreshold, minMediumDistanceToSpawn);
     }
 
-    bool IsBigDensityMaxed(Vector3 pos, bool canRemove) {
-        return CheckDensity(pos, bigSpawnedObjects, bigDensityThreshold, minBigDistanceToSpawn, minBigRadiusDensityCheck, canRemove);
+    bool IsBigDensityMaxed(Vector3 pos) {
+        return CheckDensity(pos, bigSpawnedObjects, bigDensityThreshold, minBigDistanceToSpawn);
     }
 
     void OnFadeOutComplete() {
+        StartCoroutine(WaitSomeMore());
+    }
+
+    IEnumerator WaitSomeMore() {
+        yield return new WaitForSeconds(.3f);
 
         foreach (var g in toRemove) {
             Destroy(g);
         }
 
         toRemove.Clear();
+
+        markedForRemoval = false;
     }
 
     //Debug.DrawLine(ray.origin, hit.point);

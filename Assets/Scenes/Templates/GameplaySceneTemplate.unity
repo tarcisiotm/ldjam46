@@ -16228,11 +16228,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   centerPoint: {fileID: 630227923}
-  minDistanceToSpawnFromCenter: 0.75
-  minSmallDistanceToSpawn: 0.2
-  minMediumDistanceToSpawn: 0.35
-  minBigDistanceToSpawn: 0.5
   spawnerParent: {fileID: 1022326194}
+  minDistanceToSpawnFromCenter: 0.75
+  minSmallDistanceToSpawn: 0.5
+  minMediumDistanceToSpawn: 1
+  minBigDistanceToSpawn: 1.5
+  smallInnerRadius: 0.15
+  mediumInnerRadius: 0.25
+  bigInnerRadius: 0.35
   minSmallRadiusDensityCheck: 0.3
   minMediumRadiusDensityCheck: 0.75
   minBigRadiusDensityCheck: 1.5
@@ -16267,6 +16270,9 @@ MonoBehaviour:
   - {fileID: 199584, guid: 84078fbefcb714034b9587b8c4a2deed, type: 3}
   - {fileID: 107084, guid: 7d67251c47fdb4fd6a8719adffbd10b2, type: 3}
   - {fileID: 113636, guid: 4138bce9e6bb94694b0149630660d574, type: 3}
+  smallSpawnedObjects: []
+  mediumSpawnedObjects: []
+  bigSpawnedObjects: []
   canSpawn: 1
 --- !u!1 &631438725 stripped
 GameObject:
