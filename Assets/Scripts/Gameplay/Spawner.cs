@@ -15,16 +15,10 @@ public class Spawner : MonoBehaviour {
     [SerializeField] float minMediumDistanceToSpawn = .75f;
     [SerializeField] float minBigDistanceToSpawn = 1.5f;
 
-
     [Header("Clear radius")]
     [SerializeField] float smallInnerRadius = .15f;
     [SerializeField] float mediumInnerRadius = .25f;
     [SerializeField] float bigInnerRadius = .35f;
-
-    [Space]
-    [SerializeField] float minSmallRadiusDensityCheck = .25f;
-    [SerializeField] float minMediumRadiusDensityCheck = .75f;
-    [SerializeField] float minBigRadiusDensityCheck = 1.5f;
 
     [Space]
     [SerializeField] int smallDensityThreshold = 4;
@@ -46,11 +40,16 @@ public class Spawner : MonoBehaviour {
 
     bool isBigMaxed, isMediumMaxed, isSmallMaxed = false;
 
+    public delegate void Spawned(int smallTotal, int mediumTotal, int bigTotal, int waterTotal, int nearWaterTotal);
+    public event Spawned OnSpawned;
 
     [Header("Debug")]
     public List<GameObject> smallSpawnedObjects = new List<GameObject>();
     public List<GameObject> mediumSpawnedObjects = new List<GameObject>();
     public List<GameObject> bigSpawnedObjects = new List<GameObject>();
+
+    public List<GameObject> nearWaterSpawedObjects = new List<GameObject>();
+    public List<GameObject> waterSpawnedObjects = new List<GameObject>();
     [Space]
 
     public bool canSpawn = true;
@@ -70,10 +69,6 @@ public class Spawner : MonoBehaviour {
     public void Spawn() {
         if (!canSpawn) { return; }
 
-        if (markedForRemoval) {
-            //Debug.Log("Should wait?");
-        }
-
         ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
         if (!Physics.Raycast(ray, out hit, 102)) {
@@ -91,14 +86,15 @@ public class Spawner : MonoBehaviour {
         isSmallMaxed = IsSmallDensityMaxed(hit.point);
 
         if (isMediumMaxed) {
-            ClearOthers(hit.point, bigInnerRadius, mediumSpawnedObjects);
+            ClearOthers(hit.point, bigInnerRadius * 2f, bigSpawnedObjects);
+            ClearOthers(hit.point, bigInnerRadius * 1.5f, mediumSpawnedObjects);
             ClearOthers(hit.point, bigInnerRadius, smallSpawnedObjects);
             SpawnFromList(bigPlants, ref bigSpawnedObjects, hit.point);
             return;
         }
 
         if (isSmallMaxed) {
-            ClearOthers(hit.point, mediumInnerRadius, mediumSpawnedObjects);
+            ClearOthers(hit.point, mediumInnerRadius * 1.5f, mediumSpawnedObjects);
             ClearOthers(hit.point, mediumInnerRadius, smallSpawnedObjects);
             SpawnFromList(plants, ref mediumSpawnedObjects, hit.point);
             return;
@@ -107,6 +103,36 @@ public class Spawner : MonoBehaviour {
         ClearOthers(hit.point, smallInnerRadius, smallSpawnedObjects);
 
         SpawnFromList(smallPlants, ref smallSpawnedObjects, hit.point);
+    }
+
+    public void SpawnOnWater() {
+        //TODO REMOVE DUPLICATE CODE
+        if (!canSpawn) { return; }
+
+        ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+        if (!Physics.Raycast(ray, out hit, 102)) {
+            return;
+        }
+
+        ClearOthers(hit.point, smallInnerRadius, waterSpawnedObjects);
+        SpawnFromList(water, ref waterSpawnedObjects, hit.point);
+        //if max spawn fish
+        //if max fish do not spawn
+    }
+
+    public void SpawnNearWater() {
+        //TODO REMOVE DUPLICATE CODE
+        if (!canSpawn) { return; }
+
+        ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+        if (!Physics.Raycast(ray, out hit, 102)) {
+            return;
+        }
+
+        ClearOthers(hit.point, smallInnerRadius, nearWaterSpawedObjects);
+        SpawnFromList(nearWater, ref nearWaterSpawedObjects, hit.point);
     }
 
     void ClearOthers(Vector3 pos, float innerRadius, List<GameObject> list) {
@@ -140,14 +166,21 @@ public class Spawner : MonoBehaviour {
         int index = Random.Range(0, list.Length);
 
         GameObject go = Instantiate(list[index]);
+        Vector3 originalScale = go.transform.localScale;
+
+        go.transform.SetParent(spawnerParent, false);
         go.transform.position = pos;
-        go.transform.SetParent(spawnerParent, true);
         go.transform.localScale = Vector3.one * .001f;
-        go.transform.DOScale(Vector3.one, .2f);
+        go.transform.DOScale(originalScale, .2f);
 
         spawnList.Add(go);
 
         GameplayManager.I.AudioMelody.Ping(pos);
+        SendSpawnEvent();
+    }
+
+    void SendSpawnEvent() {
+        OnSpawned?.Invoke(smallSpawnedObjects.Count, mediumSpawnedObjects.Count, bigSpawnedObjects.Count, waterSpawnedObjects.Count, nearWaterSpawedObjects.Count);
     }
 
     public void EnableSpawn() {
@@ -176,7 +209,6 @@ public class Spawner : MonoBehaviour {
             if (density >= maxDensity) {
                 result = true;
             }
-            Debug.Log("Density reached: "+density + "  "+maxDensity);
 
         }
 
@@ -211,6 +243,4 @@ public class Spawner : MonoBehaviour {
         markedForRemoval = false;
     }
 
-    //Debug.DrawLine(ray.origin, hit.point);
-    //Debug.Log(hit.point + " " + hit.collider.gameObject.name);
 }
