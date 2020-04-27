@@ -13523,7 +13523,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &395319338
 Transform:
   m_ObjectHideFlags: 0
@@ -18122,7 +18122,7 @@ MonoBehaviour:
   smallInnerRadius: 0.15
   mediumInnerRadius: 0.25
   bigInnerRadius: 0.35
-  waterInnerRadius: 0.3
+  waterInnerRadius: 0.4
   smallDensityThreshold: 4
   mediumDensityThreshold: 2
   bigDensityThreshold: 1
