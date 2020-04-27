@@ -19,11 +19,14 @@ public class Spawner : MonoBehaviour {
     [SerializeField] float smallInnerRadius = .15f;
     [SerializeField] float mediumInnerRadius = .25f;
     [SerializeField] float bigInnerRadius = .35f;
+    [SerializeField] float waterInnerRadius = .35f;
 
     [Space]
     [SerializeField] int smallDensityThreshold = 4;
     [SerializeField] int mediumDensityThreshold = 2;
     [SerializeField] int bigDensityThreshold = 1;
+    //[SerializeField] int nearWaterDensity = 4;
+    [SerializeField] int waterDensity = 3;
 
     [Space]
     [SerializeField] GameObject[] smallPlants;
@@ -57,11 +60,7 @@ public class Spawner : MonoBehaviour {
     bool isMediumAllowed = true;
     bool isBigAllowed = true;
 
-    bool shouldAbortSpawn = false;
-
     bool markedForRemoval = false;
-
-    //todo cooldown?
 
     private void Start() {
     }
@@ -115,7 +114,7 @@ public class Spawner : MonoBehaviour {
             return;
         }
 
-        ClearOthers(hit.point, smallInnerRadius, waterSpawnedObjects);
+        ClearOthers(hit.point, waterInnerRadius, waterSpawnedObjects);
         SpawnFromList(water, ref waterSpawnedObjects, hit.point);
         //if max spawn fish
         //if max fish do not spawn
