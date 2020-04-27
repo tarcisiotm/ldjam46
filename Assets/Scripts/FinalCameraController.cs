@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using DG.Tweening;
 
 public class FinalCameraController : MonoBehaviour
@@ -11,12 +12,19 @@ public class FinalCameraController : MonoBehaviour
     [SerializeField] float duration = 3f;
     [SerializeField] float delay = 2f;
 
+    [Space]
+    [SerializeField] UnityEvent onBegin = default;
+    [SerializeField] UnityEvent onEnd = default;
+
     void Start()
     {
-        mainCamera.DOFieldOfView(finalFov, duration).SetDelay(delay);
+        onBegin?.Invoke();
+        mainCamera.DOFieldOfView(finalFov, duration).SetDelay(delay).OnComplete(OnFovDone);
         mainCamera.transform.DOLocalMove(finalPos, duration).SetDelay(delay);
     }
 
-    void OnFovDone() { }
+    void OnFovDone() {
+        onEnd?.Invoke();
+    }
 
 }
