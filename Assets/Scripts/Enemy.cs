@@ -2,6 +2,7 @@
 using UnityEngine;
 using DG.Tweening;
 using TG.Core.Audio;
+using UnityEngine.Events;
 
 public class Enemy : MonoBehaviour
 {
@@ -10,6 +11,8 @@ public class Enemy : MonoBehaviour
     [SerializeField] float distanceToAttack = .5f;
 
     [SerializeField] float attackCooldown = 3f;
+
+    [SerializeField] UnityEvent onDeath = default;
 
     [Header("References")]
     [SerializeField] GameObject parentToDeactivate = default;
@@ -160,6 +163,7 @@ public class Enemy : MonoBehaviour
     }
 
     IEnumerator DoDie() {
+        onDeath?.Invoke();
         yield return new WaitForSeconds(2f);
         transform.DOLocalMoveY(transform.localPosition.y - .5f, 2f);
         yield return new WaitForSeconds(2f);

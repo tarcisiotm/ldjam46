@@ -12,6 +12,7 @@ public class TreeUpgrade : MonoBehaviour {
     [SerializeField] int currentIndex = -1;
 
     bool isDone = false;
+    bool canUpgrade = true;
 
     void Start() {
         if (treeUpgrades.Length > 0) {
@@ -27,7 +28,7 @@ public class TreeUpgrade : MonoBehaviour {
 #endif
 
     public void Upgrade() {
-        if (isDone) { return; }
+        if (!canUpgrade || isDone) { return; }
 
         //if is final step next and enemy is alive
 
@@ -41,6 +42,10 @@ public class TreeUpgrade : MonoBehaviour {
         } else {
             currentUpgrade.DoNextStep(stepDuration);
         }
+    }
+
+    public void SetCanUpgrade(bool p_canUpgrade) {
+        canUpgrade = p_canUpgrade;
     }
 
     public void SetIsDone() {
