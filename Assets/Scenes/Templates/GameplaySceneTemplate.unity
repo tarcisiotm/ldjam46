@@ -18116,7 +18116,7 @@ MonoBehaviour:
   centerPoint: {fileID: 630227923}
   spawnerParent: {fileID: 1022326194}
   minDistanceToSpawnFromCenter: 0.75
-  minSmallDistanceToSpawn: 0.75
+  minSmallDistanceToSpawn: 10.11
   minMediumDistanceToSpawn: 1.25
   minBigDistanceToSpawn: 2
   smallInnerRadius: 0.15
@@ -43373,7 +43373,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   destroyAfterInvoke: 1
-  spawner: {fileID: 0}
+  spawner: {fileID: 630227927}
   smallTarget: -1
   mediumTarget: -1
   bigTarget: -1
