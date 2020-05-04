@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.Events;
 using Com.LuisPedroFonseca.ProCamera2D;
+using System.Collections;
 
 public class CameraRotationCut : MonoBehaviour
 {
@@ -22,16 +23,26 @@ public class CameraRotationCut : MonoBehaviour
     }
 
     private void Update() {
-        cachedPanAndZoomValue = proCameraPanAndZoom.enabled;
-        proCameraPanAndZoom.enabled = false;
+        cachedPanAndZoomValue = proCameraPanAndZoom.AllowZoom;
+        proCameraPanAndZoom.AllowZoom = false;
+        proCameraPanAndZoom.AllowPan = false;
     }
 
     private void LateUpdate() {
         SetPos(useThisGOPos ? transform.position : pos);
         SetFov(targetFov);
         SetRotation(eulerAngles);
+        proCameraPanAndZoom.CenterPanTargetOnCamera(1);
+        StartCoroutine(WaitAndDo());
+ 
+    }
 
-        proCameraPanAndZoom.enabled = cachedPanAndZoomValue;
+    IEnumerator WaitAndDo() {
+        yield return null;
+        yield return null;
+
+        proCameraPanAndZoom.AllowZoom = cachedPanAndZoomValue;
+        proCameraPanAndZoom.AllowPan = true;
 
         if (destroyOnStart) {
             Destroy(gameObject);

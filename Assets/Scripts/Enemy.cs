@@ -144,6 +144,8 @@ public class Enemy : MonoBehaviour
 
     private void Die() {
         DOTween.Kill(transform);
+        var particleSystem = GetComponentInChildren<ParticleSystem>();
+        particleSystem.Stop(true, ParticleSystemStopBehavior.StopEmitting);
 
         if(attackRoutine != null) {
             StopCoroutine(attackRoutine);
@@ -165,7 +167,9 @@ public class Enemy : MonoBehaviour
     IEnumerator DoDie() {
         onDeath?.Invoke();
         yield return new WaitForSeconds(2f);
-        transform.DOLocalMoveY(transform.localPosition.y - .5f, 2f);
+        var finalY = Vector3.Normalize(transform.localPosition).y * .5f;
+        transform.DOMoveY(transform.position.y - .5f, 2f);
+        transform.DOScale(.001f, 2f);
         yield return new WaitForSeconds(2f);
         gameObject.SetActive(false);
     }
