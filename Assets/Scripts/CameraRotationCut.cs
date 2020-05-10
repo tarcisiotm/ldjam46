@@ -16,24 +16,29 @@ public class CameraRotationCut : MonoBehaviour
     [SerializeField] bool destroyOnStart = true;
     [SerializeField] bool useThisGOPos = false;
 
-    bool cachedPanAndZoomValue = false;
+    //bool cachedPanAndZoomValue = false;
+
+    bool hasPlayed = false;
 
     private void Start() {
         
     }
 
     private void Update() {
-        cachedPanAndZoomValue = proCameraPanAndZoom.AllowZoom;
+        if (hasPlayed) { return; }
+        //cachedPanAndZoomValue = proCameraPanAndZoom.AllowZoom;
         proCameraPanAndZoom.AllowZoom = false;
         proCameraPanAndZoom.AllowPan = false;
     }
 
     private void LateUpdate() {
+        if (hasPlayed) { return; }
         SetPos(useThisGOPos ? transform.position : pos);
         SetFov(targetFov);
         SetRotation(eulerAngles);
         proCameraPanAndZoom.CenterPanTargetOnCamera(1);
         StartCoroutine(WaitAndDo());
+        hasPlayed = true;
  
     }
 
@@ -41,8 +46,7 @@ public class CameraRotationCut : MonoBehaviour
         yield return null;
         yield return null;
 
-        proCameraPanAndZoom.AllowZoom = cachedPanAndZoomValue;
-        proCameraPanAndZoom.AllowPan = true;
+        proCameraPanAndZoom.AllowZoom = proCameraPanAndZoom.AllowPan = true;
 
         if (destroyOnStart) {
             Destroy(gameObject);

@@ -19,12 +19,17 @@ public class FinalCameraController : MonoBehaviour
     void Start()
     {
         onBegin?.Invoke();
-        mainCamera.DOFieldOfView(finalFov, duration).SetDelay(delay).OnComplete(OnFovDone);
-        mainCamera.transform.DOLocalMove(finalPos, duration).SetDelay(delay);
+        CenterCamera();
     }
 
     void OnFovDone() {
         onEnd?.Invoke();
+    }
+
+    public void CenterCamera()
+    {
+        mainCamera.DOFieldOfView(finalFov, duration).SetDelay(delay).OnComplete(OnFovDone);
+        mainCamera.transform.DOLocalMove(finalPos, duration).SetDelay(delay);
     }
 
 }

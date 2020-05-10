@@ -7,7 +7,10 @@ public class ButtonPowerUp : MonoBehaviour
     [SerializeField] Button button = null;
     [SerializeField] Image fillImage = null;
     [SerializeField] float fillPerSec = .02f;
-
+    [Space]
+    [SerializeField] bool isToggle = false;
+    [SerializeField] GameObject toggleGO = null;
+    [Space]
     [Tooltip("For powerups that need setup, this is a cooldown.")]
     [SerializeField] bool reEnableFromExternalEvent = false;
 
@@ -15,8 +18,11 @@ public class ButtonPowerUp : MonoBehaviour
     [SerializeField] GameObject goToCheck = null;
 
     [SerializeField] UnityEvent onClick = null;
+    [SerializeField] UnityEvent onToggleDisabled = null;
 
     Color originalColor;
+
+    bool toggleState = false;
 
     [SerializeField] Color filledColor;
 
@@ -63,11 +69,34 @@ public class ButtonPowerUp : MonoBehaviour
 
         if(goToCheck != null && goToCheck.activeSelf) { return; }
 
+
         onClick?.Invoke();
+
+        if (isToggle)
+        {
+            Toggle();
+            return;
+        }
 
         if (reEnableFromExternalEvent) { return; }
 
         Reset();
+    }
+
+    public void DisableToggle()
+    {
+        if (toggleState) { Toggle(); }
+    }
+
+    void Toggle()
+    {
+        toggleState = !toggleState;
+        toggleGO.SetActive(toggleState);
+
+        if (!toggleState)
+        {
+            onToggleDisabled?.Invoke();
+        }
     }
 
 
