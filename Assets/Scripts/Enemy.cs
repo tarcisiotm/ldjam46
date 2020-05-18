@@ -159,7 +159,7 @@ public class Enemy : MonoBehaviour
         var audio = GameplayManager.I.GetAudioFromPool(transform.position);
         int index = Random.Range(0, dieClips.Length);
 
-        audio.PlayAndDisable(dieClips[index], 1);
+        audio.PlayAndDisable(dieClips[index], .6f);
 
         StartCoroutine(DoDie());
     }

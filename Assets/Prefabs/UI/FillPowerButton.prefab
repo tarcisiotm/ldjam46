@@ -60,6 +60,7 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_RaycastTarget: 1
+  m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -130,9 +131,14 @@ MonoBehaviour:
   button: {fileID: 6545073515599824835}
   fillImage: {fileID: 6545073515971673184}
   fillPerSec: 0.02
+  isToggle: 0
+  toggleGO: {fileID: 0}
   reEnableFromExternalEvent: 0
   goToCheck: {fileID: 0}
   onClick:
+    m_PersistentCalls:
+      m_Calls: []
+  onToggleDisabled:
     m_PersistentCalls:
       m_Calls: []
   filledColor: {r: 0, g: 0, b: 0, a: 0}
@@ -159,6 +165,7 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
+  m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -241,6 +248,7 @@ MonoBehaviour:
   audioSource: {fileID: 0}
   onHover: {fileID: 0}
   onHoverVolume: 0.2
+  onClickVolume: 0.05
   clickClip: {fileID: 8300000, guid: df7e004b352ca4c4896c2935b2b79e2c, type: 3}
 --- !u!1 &6545073515971673190
 GameObject:
@@ -302,6 +310,7 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 0.33333334, g: 0.8117647, b: 1, a: 1}
   m_RaycastTarget: 1
+  m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []

@@ -21,7 +21,9 @@ public class CameraRotationCut : MonoBehaviour
     bool hasPlayed = false;
 
     private void Start() {
-        
+#if UNITY_WEBGL && !UNITY_EDITOR
+        //proCameraPanAndZoom.enabled = false;
+#endif
     }
 
     private void Update() {
@@ -33,10 +35,16 @@ public class CameraRotationCut : MonoBehaviour
 
     private void LateUpdate() {
         if (hasPlayed) { return; }
+
         SetPos(useThisGOPos ? transform.position : pos);
         SetFov(targetFov);
         SetRotation(eulerAngles);
-        proCameraPanAndZoom.CenterPanTargetOnCamera(1);
+
+        if (proCameraPanAndZoom.enabled)
+        {
+            proCameraPanAndZoom.CenterPanTargetOnCamera(1);
+        }
+
         StartCoroutine(WaitAndDo());
         hasPlayed = true;
  

@@ -46,7 +46,7 @@ public class LightningController : MonoBehaviour
         int index = Random.Range(0, audioClips.Length);
         var audio = GameplayManager.I.GetAudioFromPool(pos);
 
-        audio.PlayAndDisable(audioClips[index], 1);
+        audio.PlayAndDisable(audioClips[index], .7f);
     }
 
     void OnComplete() {
